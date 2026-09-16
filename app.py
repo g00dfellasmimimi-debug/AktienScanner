@@ -1,5 +1,5 @@
 import streamlit as st
-from stocks import detail_info
+from stocks import detail_info, top_trend_aktien
 from config import AKTIEN
 from scoring import berechne_score
 

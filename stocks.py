@@ -27,3 +27,8 @@ def detail_info(ticker):
         "marketcap": info.get("marketCap", 0),
         "volume": info.get("averageVolume", 0),
     }
+
+
+def top_trend_aktien():
+
+    return ["NVDA", "META", "MSFT", "AAPL", "TSLA"]
