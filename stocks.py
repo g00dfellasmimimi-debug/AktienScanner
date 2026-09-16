@@ -1,11 +1,6 @@
 import yfinance as yf
 
 
-def lade_daten(ticker):
-
-    return yf.download(ticker, period="1mo", auto_adjust=True, progress=False)
-
-
 def firmeninfo(ticker):
 
     aktie = yf.Ticker(ticker)
@@ -32,12 +27,12 @@ def detail_info(ticker):
 from config import AKTIEN
 
 
-def top_trend_aktien():
+def top_trend_aktien(periode="1mo"):
 
     ergebnis = []
 
     for ticker in AKTIEN:
-        data = lade_daten(ticker)
+        data = lade_daten(ticker, periode)
 
         if data.empty:
             continue
@@ -52,3 +47,8 @@ def top_trend_aktien():
     ergebnis.sort(key=lambda x: x[1], reverse=True)
     print(ergebnis)
     return ergebnis
+
+
+def lade_daten(ticker, periode="1mo"):
+
+    return yf.download(ticker, period=periode, auto_adjust=True, progress=False)

@@ -8,6 +8,8 @@ st.title("AktienScanner")
 
 ticker = st.text_input("Ticker", "NVDA")
 
+periode = st.selectbox("Zeitraum", ["1mo", "3mo", "6mo", "1y"])
+
 if st.button("Firmeninfo"):
     info = detail_info(ticker)
 
@@ -18,14 +20,14 @@ if st.button("Firmeninfo"):
     st.write(f"52W Tief: ${info['tief']}")
 
 if st.button("Chart anzeigen"):
-    data = lade_daten(ticker)
+    data = lade_daten(ticker, periode)
 
     if not data.empty:
         st.line_chart(data["Close"])
 
 st.header("🔥 Top Trend Aktien")
 
-for platz, (ticker, aenderung) in enumerate(top_trend_aktien(), start=1):
+for platz, (ticker, aenderung) in enumerate(top_trend_aktien(periode), start=1):
     if aenderung >= 0:
         st.success(f"{platz}. {ticker}: {aenderung:.2f}%")
     else:
