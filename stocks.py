@@ -36,7 +36,7 @@ def top_trend_aktien():
 
     ergebnis = []
 
-    for ticker in AKTIEN[:5]:
+    for ticker in AKTIEN:
         data = lade_daten(ticker)
 
         if data.empty:
