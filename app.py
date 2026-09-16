@@ -25,5 +25,5 @@ if st.button("Chart anzeigen"):
 
 st.header("🔥 Top Trend Aktien")
 
-for ticker, aenderung in top_trend_aktien():
-    st.write(f"{ticker}: {aenderung:.2f}%")
+for platz, (ticker, aenderung) in enumerate(top_trend_aktien(), start=1):
+    st.write(f"{platz}. {ticker}: {aenderung:.2f}%")
