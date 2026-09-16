@@ -28,3 +28,22 @@ st.header("🔥 Top Trend Aktien")
 
 if st.button("Top 10 berechnen"):
     st.write("Top 10 werden geladen...")
+
+    aktien = AKTIEN
+
+    ergebnisse = []
+
+    st.write("Berechne Top 10...")
+
+    for ticker in aktien[:5]:
+        st.write(f"Lade: {ticker}")
+
+        data = lade_daten(ticker)
+
+        st.write(f"Daten erhalten: {ticker}")
+
+        if data.empty:
+            continue
+
+        st.write(ticker)
+        st.write(data["Close"].tail(1))
