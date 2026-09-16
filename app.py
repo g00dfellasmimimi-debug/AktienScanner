@@ -1,5 +1,7 @@
 import streamlit as st
 from stocks import detail_info
+from config import AKTIEN
+from scoring import berechne_score
 
 st.title("AktienScanner")
 
@@ -21,3 +23,8 @@ if st.button("Chart anzeigen"):
 
     if not data.empty:
         st.line_chart(data["Close"])
+
+st.header("🔥 Top Trend Aktien")
+
+if st.button("Top 10 berechnen"):
+    st.write("Top 10 werden geladen...")
