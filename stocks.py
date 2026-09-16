@@ -29,6 +29,26 @@ def detail_info(ticker):
     }
 
 
+from config import AKTIEN
+
+
 def top_trend_aktien():
 
-    return ["NVDA", "META", "MSFT", "AAPL", "TSLA"]
+    ergebnis = []
+
+    for ticker in AKTIEN[:5]:
+        data = lade_daten(ticker)
+
+        if data.empty:
+            continue
+
+        start = float(data["Close"].iloc[0].iloc[0])
+        ende = float(data["Close"].iloc[-1].iloc[0])
+
+        aenderung = ((ende - start) / start) * 100
+
+        ergebnis.append((ticker, aenderung))
+
+    ergebnis.sort(key=lambda x: x[1], reverse=True)
+    print(ergebnis)
+    return ergebnis
