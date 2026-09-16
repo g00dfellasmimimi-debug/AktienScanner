@@ -1,8 +1,26 @@
 import customtkinter as ctk
-import yfinance as yf
+from stocks import lade_daten
+from scoring import berechne_score
+from stocks import firmeninfo
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
+
+
+def zeige_info():
+
+    ticker = ticker_eingabe.get().upper()
+
+    if ticker == "":
+        return
+
+    name, preis = firmeninfo(ticker)
+
+    ausgabe.delete("1.0", "end")
+
+    ausgabe.insert("end", f"{name}\n\n")
+
+    ausgabe.insert("end", f"Aktueller Preis: ${preis}\n")
 
 
 def lade_aktien():
@@ -68,7 +86,7 @@ def lade_aktien():
 
     for ticker in aktien:
         try:
-            data = yf.download(ticker, period="1mo", auto_adjust=True, progress=False)
+            data = lade_daten(ticker)
 
             if data.empty:
                 continue
@@ -89,7 +107,7 @@ def lade_aktien():
 
             volumen = data[("Volume", ticker)].mean()
 
-            score = kurs_30 * 0.7 + kurs_7 * 0.3 + (volumen / 20000000)
+            score = berechne_score(kurs_30, kurs_7, volumen)
             ergebnisse.append(
                 {
                     "ticker": ticker,
@@ -121,6 +139,27 @@ def lade_aktien():
         )
 
 
+def zeige_chart():
+
+    ticker = ticker_eingabe.get().upper()
+
+    if ticker == "":
+        return
+
+    import matplotlib.pyplot as plt
+
+    data = lade_daten(ticker)
+
+    if data.empty:
+        return
+    plt.close("all")
+    data[("Close", ticker)].plot()
+
+    plt.title(f"{ticker} - Kursverlauf")
+    plt.grid(True)
+    plt.show(block=False)
+
+
 app = ctk.CTk()
 app.geometry("800x600")
 app.title("Trend Aktien Scanner")
@@ -129,8 +168,16 @@ titel = ctk.CTkLabel(app, text="Top Trend Aktien", font=("Arial", 24))
 
 titel.pack(pady=20)
 
-button = ctk.CTkButton(app, text="Aktien analysieren", command=lade_aktien)
+ticker_eingabe = ctk.CTkEntry(app, width=200, placeholder_text="Ticker z.B. NVDA")
 
+ticker_eingabe.pack(pady=10)
+button = ctk.CTkButton(app, text="Aktien analysieren", command=lade_aktien)
+chart_button = ctk.CTkButton(app, text="Chart anzeigen", command=zeige_chart)
+
+chart_button.pack(pady=10)
+info_button = ctk.CTkButton(app, text="Firmeninfo", command=zeige_info)
+
+info_button.pack(pady=10)
 button.pack(pady=10)
 
 ausgabe = ctk.CTkTextbox(app, width=700, height=400)

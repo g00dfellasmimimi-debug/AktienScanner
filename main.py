@@ -1,75 +1,34 @@
-import yfinance as yf
+from config import AKTIEN
+from stocks import lade_daten
+from scoring import berechne_score
 
-aktien = [
-    "AAPL",
-    "MSFT",
-    "NVDA",
-    "TSLA",
-    "META",
-    "AMD",
-    "AMZN",
-    "GOOGL",
-    "NFLX",
-    "PLTR",
-    "AVGO",
-    "INTC",
-    "MU",
-    "QCOM",
-    "CRM",
-    "ADBE",
-    "SNOW",
-    "SHOP",
-    "UBER",
-    "ASML",
-    "TXN",
-    "AMAT",
-    "PANW",
-    "CRWD",
-    "MSTR",
-    "COIN",
-    "ARM",
-    "SMCI",
-    "RDDT",
-    "NET",
-    "ZS",
-    "DDOG",
-    "TEAM",
-    "MDB",
-    "NOW",
-    "SHOP",
-    "PYPL",
-    "XYZ",
-    "ROKU",
-    "DOCU",
-    "BABA",
-    "NIO",
-    "LI",
-    "XPEV",
-    "SOFI",
-    "HOOD",
-    "RBLX",
-    "FUBO",
-    "IONQ",
-    "RKLB",
-]
+aktien = AKTIEN
 
 ergebnisse = []
 
 for ticker in aktien:
     try:
-        data = yf.download(ticker, period="1mo", auto_adjust=True, progress=False)
+        data = lade_daten(ticker)
+
+        if data.empty:
+            continue
 
         startkurs = data[("Close", ticker)].iloc[0]
         endkurs = data[("Close", ticker)].iloc[-1]
 
-        aenderung = ((endkurs - startkurs) / startkurs) * 100
+        kurs_30 = ((endkurs - startkurs) / startkurs) * 100
+
+        kurs_7 = (
+            (data[("Close", ticker)].iloc[-1] - data[("Close", ticker)].iloc[-5])
+            / data[("Close", ticker)].iloc[-5]
+        ) * 100
 
         volumen = data[("Volume", ticker)].mean()
 
-        score = aenderung + (volumen / 10000000)
+        score = berechne_score(kurs_30, kurs_7, volumen)
 
         ergebnisse.append(
-            {"ticker": ticker, "kurs": endkurs, "aenderung": aenderung, "score": score}
+            {"ticker": ticker, "kurs": endkurs, "aenderung": kurs_30, "score": score}
         )
 
     except Exception as e:
@@ -85,5 +44,5 @@ for i, aktie in enumerate(ergebnisse[:10], start=1):
         f"{aktie['ticker']:6s} "
         f"Preis: ${aktie['kurs']:7.2f} "
         f"Änd.: {aktie['aenderung']:6.2f}% "
-        f"Score: {aktie['score']:6.2f}\n"
+        f"Score: {aktie['score']:6.2f}"
     )

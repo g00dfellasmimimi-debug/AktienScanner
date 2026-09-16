@@ -1,0 +1,17 @@
+AKTIEN = [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "TSLA",
+    "META",
+    "AMD",
+    "AMZN",
+    "GOOGL",
+    "NFLX",
+    "PLTR",
+    "AVGO",
+    "INTC",
+    "MU",
+    "QCOM",
+    "CRM",
+]
