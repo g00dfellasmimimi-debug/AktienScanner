@@ -2,6 +2,7 @@ import customtkinter as ctk
 from stocks import lade_daten
 from scoring import berechne_score
 from stocks import firmeninfo
+from stocks import detail_info
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -160,6 +161,28 @@ def zeige_chart():
     plt.show(block=False)
 
 
+def zeige_details():
+
+    ticker = ticker_eingabe.get().upper()
+
+    if not ticker:
+        return
+
+    info = detail_info(ticker)
+
+    ausgabe.delete("1.0", "end")
+
+    ausgabe.insert(
+        "end",
+        f"{info['name']}\n\n"
+        f"Preis: ${info['preis']}\n"
+        f"52W Hoch: ${info['hoch']}\n"
+        f"52W Tief: ${info['tief']}\n"
+        f"Market Cap: {info['marketcap']}\n"
+        f"Volumen: {info['volume']}\n",
+    )
+
+
 app = ctk.CTk()
 app.geometry("800x600")
 app.title("Trend Aktien Scanner")
@@ -179,7 +202,9 @@ info_button = ctk.CTkButton(app, text="Firmeninfo", command=zeige_info)
 
 info_button.pack(pady=10)
 button.pack(pady=10)
+detail_button = ctk.CTkButton(app, text="Details", command=zeige_details)
 
+detail_button.pack(pady=10)
 ausgabe = ctk.CTkTextbox(app, width=700, height=400)
 
 ausgabe.pack(pady=20)

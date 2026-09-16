@@ -12,4 +12,18 @@ def firmeninfo(ticker):
 
     return (aktie.info.get("longName", ticker), aktie.info.get("currentPrice", 0))
 
-    return data
+
+def detail_info(ticker):
+
+    aktie = yf.Ticker(ticker)
+
+    info = aktie.info
+
+    return {
+        "name": info.get("longName", "Unbekannt"),
+        "preis": info.get("currentPrice", 0),
+        "hoch": info.get("fiftyTwoWeekHigh", 0),
+        "tief": info.get("fiftyTwoWeekLow", 0),
+        "marketcap": info.get("marketCap", 0),
+        "volume": info.get("averageVolume", 0),
+    }
