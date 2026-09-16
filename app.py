@@ -25,6 +25,5 @@ if st.button("Chart anzeigen"):
 
 st.header("🔥 Top Trend Aktien")
 
-if st.button("Top 5 berechnen"):
-    for ticker, aenderung in top_trend_aktien():
-        st.write(f"{ticker}: {aenderung:.2f}%")
+for ticker, aenderung in top_trend_aktien():
+    st.write(f"{ticker}: {aenderung:.2f}%")
