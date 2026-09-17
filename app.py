@@ -19,11 +19,10 @@ if st.button("Firmeninfo"):
     st.write(f"52W Hoch: ${info['hoch']}")
     st.write(f"52W Tief: ${info['tief']}")
 
-if st.button("Chart anzeigen"):
-    data = lade_daten(ticker, periode)
+data = lade_daten(ticker, periode)
 
-    if not data.empty:
-        st.line_chart(data["Close"])
+if not data.empty:
+    st.line_chart(data["Close"])
 
 st.header("🔥 Top Trend Aktien")
 
